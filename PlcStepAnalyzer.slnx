@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PlcStepAnalyzer.Model/PlcStepAnalyzer.Model.csproj" Id="1c664a25-8c3a-4d55-9384-87a74e7a399d" />
+  <Project Path="PlcStepAnalyzer/PlcStepAnalyzer.csproj" />
+</Solution>

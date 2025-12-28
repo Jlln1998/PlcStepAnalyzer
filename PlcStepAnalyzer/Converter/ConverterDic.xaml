@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:PlcStepAnalyzer.Converter">
+    <converter:IconKeyToGeometry x:Key="IconKeyToGeometry"/>
+    <converter:BoolToVisibility x:Key="BoolToVisibility"/>
+    <converter:RowIndexConverter x:Key="RowIndexConverter"/>
+</ResourceDictionary>

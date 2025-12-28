@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="AilimamaShuHei_Blod">/PlcStepAnalyzer;component/Resources/Fonts/AlimamaShuHeiTi-Bold.ttf#阿里妈妈数黑体</FontFamily>
+    <FontFamily x:Key="AilimamaDongFangDaKai_Regular">/PlcStepAnalyzer;component/Resources/Fonts/AlimamaDongFangDaKai-Regular.ttf#Alimama DongFangDaKai</FontFamily>
+</ResourceDictionary>

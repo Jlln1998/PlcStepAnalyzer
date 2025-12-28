@@ -1,0 +1,370 @@
+﻿<Window x:Class="PlcStepAnalyzer.Pages.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:PlcStepAnalyzer.Pages.Views"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:PlcStepAnalyzer.Model;assembly=PlcStepAnalyzer.Model"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:vm="clr-namespace:PlcStepAnalyzer.Pages.ViewModels"
+        Title="Plc流程步解析器"
+        d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
+        d:Height="900"
+        d:Width="1600"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Background="{DynamicResource BgColor_Window}"
+        FontFamily="{StaticResource AilimamaShuHei_Blod}"
+        FontSize="16"
+        Foreground="{DynamicResource FontColor}"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="82" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <DockPanel>
+            <!--  左侧菜单区  -->
+            <Border DockPanel.Dock="Left" Width="113" Background="{DynamicResource BgColor_Menu}">
+                <DockPanel LastChildFill="False">
+                    <Border DockPanel.Dock="Top">
+                        <StackPanel>
+                            <Border Height="160">
+                                <Border Width="60"
+                                        Height="60"
+                                        Padding="0"
+                                        Background="#000000"
+                                        ClipToBounds="True"
+                                        CornerRadius="30"
+                                        WindowChrome.IsHitTestVisibleInChrome="True">
+                                    <Button HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Padding="0"
+                                            Margin="0"
+                                            Click="GitHubBtn_Click"
+                                            Style="{DynamicResource StaticIconBtnStyle}">
+                                        <Path Width="60"
+                                              Height="60"
+                                              Data="{StaticResource GitHubIcon}"
+                                              Fill="{DynamicResource FontColor_Menu}"
+                                              Stretch="Uniform"/>
+                                    </Button>
+                                </Border>
+                            </Border>
+                            <!--  菜单集合  -->
+                            <ItemsControl ItemsSource="{Binding FirstMenus}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="model:SysMenu">
+                                        <Button x:Name="FirstMenuBtn"
+                                                Height="120"
+                                                ClipToBounds="True"
+                                                Command="{Binding DataContext.MenuClickCmd, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource StaticIconBtnStyle}">
+                                            <StackPanel>
+                                                <Path x:Name="FirstMenuIcon"
+                                                      Width="40"
+                                                      Height="40"
+                                                      Data="{Binding IconKey, Converter={StaticResource IconKeyToGeometry}}"
+                                                      Fill="{DynamicResource FontColor_Menu}"
+                                                      Stretch="Uniform">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <TranslateTransform X="0" Y="0"/>
+                                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+                                                <TextBlock x:Name="FirstMenuText"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,12,0,0"
+                                                           FontSize="16"
+                                                           Foreground="{DynamicResource FontColor_Menu}"
+                                                           Text="{Binding Name}">
+                                                    <TextBlock.RenderTransform>
+                                                        <TranslateTransform X="0" Y="0"/>
+                                                    </TextBlock.RenderTransform>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                <Setter TargetName="FirstMenuBtn" Property="Background" Value="{DynamicResource BgColor_MenuSelected}"/>
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(TranslateTransform.Y)"
+                                                                             From="0"
+                                                                             To="8"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                                                             From="1"
+                                                                             To="1.15"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                                                             From="1"
+                                                                             To="1.15"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuText"
+                                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                             From="0"
+                                                                             To="50"
+                                                                             Duration="0:0:1"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuText"
+                                                                             Storyboard.TargetProperty="Opacity"
+                                                                             From="1"
+                                                                             To="0"
+                                                                             Duration="0:0:0.3"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard TargetName="FirstMenuText">
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(TranslateTransform.Y)"
+                                                                             From="8"
+                                                                             To="0"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                                                             From="1.15"
+                                                                             To="1"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuIcon"
+                                                                             Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                                                             From="1.15"
+                                                                             To="1"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuText"
+                                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                             From="20"
+                                                                             To="0"
+                                                                             Duration="0:0:0.2"/>
+                                                            <DoubleAnimation Storyboard.TargetName="FirstMenuText"
+                                                                             Storyboard.TargetProperty="Opacity"
+                                                                             From="0"
+                                                                             To="1"
+                                                                             Duration="0:0:0.3"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                    <!--  关于按钮  -->
+                    <Border DockPanel.Dock="Bottom" Height="160">
+                        <Button x:Name="AboutMenuBtn"
+                                Height="120"
+                                ClipToBounds="True"
+                                Command="{Binding DataContext.MenuClickCmd, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                CommandParameter="{Binding AboutAppMenu}"
+                                Style="{StaticResource StaticIconBtnStyle}">
+                            <Grid>
+                                <Border Width="45"
+                                        Height="45"
+                                        VerticalAlignment="Center"
+                                        Padding="0"
+                                        Background="{DynamicResource FontColor_Menu}"
+                                        BorderThickness="0"
+                                        ClipToBounds="False"
+                                        CornerRadius="25"
+                                        Visibility="{Binding AboutBgVisibility}"/>
+                                <Path x:Name="AboutMenuIcon"
+                                      Width="50"
+                                      Height="50"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      d:Fill="{DynamicResource BgColor_MenuSelected}"
+                                      Data="{DynamicResource AboutIcon}"
+                                      Fill="{Binding AboutIconBrush}"
+                                      Stretch="Uniform"/>
+                            </Grid>
+                        </Button>
+                    </Border>
+                </DockPanel>
+            </Border>
+            <!--  顶部功能区  -->
+            <Border DockPanel.Dock="Top"
+                    Height="110"
+                    Padding="35,0,0,0"
+                    Background="Transparent"
+                    Focusable="True">
+                <DockPanel LastChildFill="False">
+                    <!--  顶部导航指示区域  -->
+                    <Border DockPanel.Dock="Left" Margin="0,0,25,0">
+                        <StackPanel Orientation="Horizontal">
+                            <!--  一级导航  -->
+                            <Border Width="160" Height="55">
+                                <Border.Background>
+                                    <DrawingBrush Stretch="Fill" TileMode="None">
+                                        <DrawingBrush.Drawing>
+                                            <GeometryDrawing Brush="{DynamicResource BgColor_NavFirst}" Geometry="{StaticResource FirstNavBgIcon}"/>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Border.Background>
+                                <Border Width="120" ClipToBounds="True">
+                                    <TextBlock x:Name="SelectFirstMenuText"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Margin="-10,0,0,0"
+                                               FontSize="20"
+                                               Foreground="{DynamicResource FontColor_Btn}"
+                                               Text="{Binding SelectFirstMenuName, NotifyOnTargetUpdated=True}">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                <TranslateTransform X="0" Y="0"/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                        <TextBlock.Triggers>
+                                            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(TranslateTransform.X)" Duration="0:0:5">
+                                                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="-140"/>
+                                                            <LinearDoubleKeyFrame KeyTime="0:0:0.05" Value="-140"/>
+                                                            <LinearDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </TextBlock.Triggers>
+                                    </TextBlock>
+                                </Border>
+                            </Border>
+                            <!--  二级导航列表  -->
+                            <Border Height="55"
+                                    Padding="0,0,50,0"
+                                    CornerRadius="20 15 10 0"
+                                    WindowChrome.IsHitTestVisibleInChrome="True">
+                                <Border.Background>
+                                    <DrawingBrush AlignmentX="Left" Stretch="UniformToFill">
+                                        <DrawingBrush.Drawing>
+                                            <GeometryDrawing Brush="{DynamicResource BgColor_NavSecound}" Geometry="{StaticResource SecondNavBgIcon}"/>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Border.Background>
+                                <ItemsControl ItemsSource="{Binding SecondMenus}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="model:SysMenu">
+                                            <Border Margin="65,0,0,0" ClipToBounds="True">
+                                                <TextBlock x:Name="SecMenuName"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Cursor="Hand"
+                                                           FontSize="19"
+                                                           Foreground="{DynamicResource FontColor_Nav}"
+                                                           Opacity="0"
+                                                           Text="{Binding Name}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                            <prism:InvokeCommandAction Command="{Binding DataContext.MenuClickCmd, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                    <TextBlock.RenderTransform>
+                                                        <TranslateTransform X="0" Y="0"/>
+                                                    </TextBlock.RenderTransform>
+                                                    <TextBlock.Triggers>
+                                                        <EventTrigger RoutedEvent="Border.Loaded">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation BeginTime="0:0:0.2"
+                                                                                     Storyboard.TargetProperty="Opacity"
+                                                                                     From="0"
+                                                                                     To="1"
+                                                                                     Duration="0:0:0.28"/>
+                                                                    <DoubleAnimation BeginTime="0:0:0.2"
+                                                                                     Storyboard.TargetProperty="RenderTransform.X"
+                                                                                     From="-140"
+                                                                                     To="0"
+                                                                                     Duration="0:0:0.28"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </TextBlock.Triggers>
+                                                </TextBlock>
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                    <Setter TargetName="SecMenuName" Property="Foreground" Value="{DynamicResource FontColor_NavSelected}"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <!--  最小化、最大化、关闭功能按钮区  -->
+                    <Border DockPanel.Dock="Right"
+                            Width="160"
+                            Height="50"
+                            Padding="16,0,16,0"
+                            Margin="0,0,55,0"
+                            Background="{DynamicResource BgColor_CtrlBtn}"
+                            CornerRadius="25"
+                            WindowChrome.IsHitTestVisibleInChrome="True">
+                        <UniformGrid Columns="3">
+                            <!--  最小化  -->
+                            <Button x:Name="MiniSizeBtn" Click="WindowControlBtn_Click" Style="{StaticResource StaticIconBtnStyle}">
+                                <Path Width="18"
+                                      Data="{StaticResource MiniSizeIcon}"
+                                      Fill="{DynamicResource FontColor_Btn}"
+                                      Stretch="Uniform"/>
+                            </Button>
+                            <!--  最大化 & 还原  -->
+                            <Button x:Name="MaxOrResizeBtn" Click="WindowControlBtn_Click" Style="{StaticResource StaticIconBtnStyle}">
+                                <Path Width="18" Fill="{DynamicResource FontColor_Btn}" Stretch="Uniform">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Data" Value="{StaticResource MaxSizeIcon}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="Maximized">
+                                                    <Setter Property="Data" Value="{DynamicResource ResizeSizeIcon}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Button>
+                            <!--  关闭  -->
+                            <Button x:Name="CloseBtn" Click="WindowControlBtn_Click" Style="{StaticResource StaticIconBtnStyle}">
+                                <Path Width="18"
+                                      Data="{StaticResource CloseIcon}"
+                                      Fill="{DynamicResource FontColor_Btn}"
+                                      Stretch="Uniform"/>
+                            </Button>
+                        </UniformGrid>
+                    </Border>
+                </DockPanel>
+            </Border>
+            <!--  底部签名区  -->
+            <Border DockPanel.Dock="Bottom" Height="60" Padding="20,0,0,0">
+                <TextBlock VerticalAlignment="Center"
+                           FontFamily="{StaticResource AilimamaDongFangDaKai_Regular}"
+                           FontSize="20"
+                           Foreground="{DynamicResource FontColor_Author}"
+                           Text="Developed by 极乐流年"/>
+            </Border>
+            <!--  内容切换区域  -->
+            <Border DockPanel.Dock="Top" Padding="40,0,55,0">
+                <ContentControl prism:RegionManager.RegionName="{x:Static local:MainWindow.REGION_MAIN}"/>
+            </Border>
+        </DockPanel>
+        <!--  全局背景蒙版  -->
+        <Border d:Visibility="Collapsed" Background="{DynamicResource BgColor_DialogMask}" Visibility="{Binding DalogBgVisibility}"/>
+    </Grid>
+</Window>

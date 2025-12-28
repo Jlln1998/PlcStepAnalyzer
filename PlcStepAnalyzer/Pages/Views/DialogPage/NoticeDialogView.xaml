@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="PlcStepAnalyzer.Pages.Views.DialogPage.NoticeDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PlcStepAnalyzer.Pages.Views.DialogPage"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:vm="clr-namespace:PlcStepAnalyzer.Pages.ViewModels.DialogPage"
+             Width="620"
+             Height="375"
+             d:DataContext="{d:DesignInstance vm:NoticeDialogViewModel}"
+             prism:Dialog.WindowStyle="{DynamicResource PrismDialogWindowStyle}"
+             mc:Ignorable="d">
+    <Border Background="White"
+            BorderBrush="{Binding TypeBrush}"
+            BorderThickness="1.5"
+            CornerRadius="15">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" Padding="25,25,0,0">
+                <TextBlock d:Text="提示" Foreground="{DynamicResource FontColor_Title}" Text="{Binding Title}"/>
+            </Border>
+            <Border DockPanel.Dock="Bottom" Padding="20,0,0,45">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Border Width="120"
+                            Height="50"
+                            Margin="0,0,70,0"
+                            Background="{DynamicResource SecondaryColor}"
+                            ClipToBounds="True"
+                            CornerRadius="12"
+                            Visibility="{Binding CancelBtnVisibility}">
+                        <Button Command="{Binding CloseCmd}"
+                                CommandParameter="Cancel"
+                                Content="取消"
+                                FontSize="20"
+                                Style="{DynamicResource StaticIconBtnStyle}"/>
+                    </Border>
+                    <Border Width="120"
+                            Height="50"
+                            d:Background="{DynamicResource SubjectColor}"
+                            Background="{Binding TypeBrush}"
+                            ClipToBounds="True"
+                            CornerRadius="12">
+                        <Button Command="{Binding CloseCmd}"
+                                CommandParameter="Confirm"
+                                Content="确认"
+                                FontSize="20"
+                                Style="{DynamicResource StaticIconBtnStyle}"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Padding="50,0,50,0">
+                <TextBlock HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           d:Text="是否退出系统"
+                           Foreground="{DynamicResource FontColor_Title}"
+                           Text="{Binding Message}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </Border>
+        </DockPanel>
+    </Border>
+</UserControl>
