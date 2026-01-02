@@ -35,8 +35,21 @@ namespace PlcStepAnalyzer
                 return;
             }
 
+            var oldConfig = ConfigFileHelper.LoadConfig();
+            if (oldConfig == null)
+            {
+                GlobalData.Instance.DataConfig = new DataConfig();
+                ConfigFileHelper.SaveConfig(GlobalData.Instance.DataConfig);
+            }
+            else
+            {
+                GlobalData.Instance.DataConfig = oldConfig;
+            }
             base.OnStartup(e);
+        }
 
+        protected override void InitializeShell(Window shell)
+        {
             var db = Container.Resolve<SqlSugarClient>();
             db.DbMaintenance.CreateDatabase();
             db.CodeFirst.InitTables(
@@ -48,16 +61,7 @@ namespace PlcStepAnalyzer
                 ]
             );
 
-            var oldConfig = ConfigFileHelper.LoadConfig();
-            if (oldConfig == null)
-            {
-                GlobalData.Instance.DataConfig = new DataConfig();
-                ConfigFileHelper.SaveConfig(GlobalData.Instance.DataConfig);
-            }
-            else
-            {
-                GlobalData.Instance.DataConfig = oldConfig;
-            }
+            base.InitializeShell(shell);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

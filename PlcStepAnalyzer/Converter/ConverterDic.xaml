@@ -4,4 +4,5 @@
     <converter:IconKeyToGeometry x:Key="IconKeyToGeometry"/>
     <converter:BoolToVisibility x:Key="BoolToVisibility"/>
     <converter:RowIndexConverter x:Key="RowIndexConverter"/>
+    <converter:EnumToDiscriptionConverter x:Key="EnumToDiscriptionConverter"/>
 </ResourceDictionary>

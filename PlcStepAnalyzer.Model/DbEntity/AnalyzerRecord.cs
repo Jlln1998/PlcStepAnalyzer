@@ -1,4 +1,6 @@
-﻿namespace PlcStepAnalyzer.Model.DbEntity
+﻿using PlcStepAnalyzer.Model.Enum;
+
+namespace PlcStepAnalyzer.Model.DbEntity
 {
     /// <summary>
     /// 文件解析记录
@@ -14,6 +16,11 @@
         /// 文件名
         /// </summary>
         public string FileName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 文件类型
+        /// </summary>
+        public PlcFileType FileType { get; set; }
 
         /// <summary>
         /// 数据启始行

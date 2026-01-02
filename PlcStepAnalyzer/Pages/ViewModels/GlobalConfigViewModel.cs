@@ -41,20 +41,20 @@ namespace PlcStepAnalyzer.Pages.ViewModels
 
         public DelegateCommand SaveCmd => _saveCmd ??= new DelegateCommand(() =>
         {
-            if (string.IsNullOrEmpty(InputStartRow) ||
-                !int.TryParse(InputStartRow, out var row) ||
-                row <= 0)
-            {
-                DialogManager.ShowWraningNoticeDialog("请输入正确的默认起始行数！");
-                return;
-            }
-            if (string.IsNullOrEmpty(InputStartCol) ||
-                !int.TryParse(InputStartCol, out var col) ||
-                col <= 0)
-            {
-                DialogManager.ShowWraningNoticeDialog("请输入正确的默认起始列数！");
-                return;
-            }
+            //if (string.IsNullOrEmpty(InputStartRow) ||
+            //    !int.TryParse(InputStartRow, out var row) ||
+            //    row <= 0)
+            //{
+            //    DialogManager.ShowWraningNoticeDialog("请输入正确的默认起始行数！");
+            //    return;
+            //}
+            //if (string.IsNullOrEmpty(InputStartCol) ||
+            //    !int.TryParse(InputStartCol, out var col) ||
+            //    col <= 0)
+            //{
+            //    DialogManager.ShowWraningNoticeDialog("请输入正确的默认起始列数！");
+            //    return;
+            //}
             if (string.IsNullOrEmpty(InputLineTime) ||
                 !int.TryParse(InputLineTime, out var time) ||
                 time <= 0)
@@ -62,8 +62,8 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                 DialogManager.ShowWraningNoticeDialog("请输入正确的间隔时长！");
                 return;
             }
-            GlobalData.Instance.DataConfig.DefaultStartRow = row;
-            GlobalData.Instance.DataConfig.DefaultStartCol = col;
+            //GlobalData.Instance.DataConfig.DefaultStartRow = row;
+            //GlobalData.Instance.DataConfig.DefaultStartCol = col;
             GlobalData.Instance.DataConfig.DefaultLineTime = time;
             var result = ConfigFileHelper.SaveConfig(GlobalData.Instance.DataConfig);
             if(result.IsSuccess)

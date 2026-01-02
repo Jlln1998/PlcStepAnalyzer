@@ -103,6 +103,14 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             Query();
         }
 
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            QueriedConfigItems.Clear();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
         private void Query()
         {
             if (VarConfigVo == null)

@@ -54,6 +54,14 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             }
         }
 
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            AnalyzerRecordItems.Clear();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers(); 
+        }
+
         public void Query()
         {
             if (_currentRecord == null)
@@ -95,7 +103,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                 string filePath = saveFileDialog.FileName;
                 try
                 {
-                    if(type == "All")
+                    if (type == "All")
                     {
                         var db = ContainerLocator.Container.Resolve<SqlSugarClient>();
                         var allItems = db.Queryable<AnalyzerRecordItem>().Where(it => it.RecordId == _currentRecord.Id)
@@ -110,11 +118,17 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                             .ToList();
 
                         var groups = allItems.GroupBy(it => it.VarName).ToList();
-
+                        var sheetNames = new List<string>();
                         var sheets = new Dictionary<string, object> { };
                         for (int i = 0; i < groups.Count(); i++)
                         {
-                            sheets.Add($"sheet{i}", groups[i].ToList());
+                            var sheetName = groups[i].Key.Length <= 30 ? groups[i].Key : groups[i].Key.Substring(0, 23);
+                            if (sheetNames.Contains(sheetName))
+                            {
+                                sheetName = sheetName + $"({i})";
+                            }
+                            sheetNames.Add(sheetName);
+                            sheets.Add(sheetName, groups[i].ToList());
                         }
                         MiniExcel.SaveAs(filePath, sheets, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                     }
@@ -131,7 +145,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
 
                         MiniExcel.SaveAs(filePath, selectedItems, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {

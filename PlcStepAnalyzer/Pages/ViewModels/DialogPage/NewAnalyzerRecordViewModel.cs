@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using PlcStepAnalyzer.Config;
 using PlcStepAnalyzer.Model.DbEntity;
+using PlcStepAnalyzer.Model.Enum;
 using Prism.Ioc;
 using SqlSugar;
 using System.Collections.ObjectModel;
@@ -73,6 +74,35 @@ namespace PlcStepAnalyzer.Pages.ViewModels.DialogPage
         private VarConfig? _selectedVarConfig;
 
         /// <summary>
+        /// 文件类型列表
+        /// </summary>
+        public ObservableCollection<PlcFileType> PlcFileTypes { get; set; } = [PlcFileType.欧姆龙_CSV, PlcFileType.倍福_CSV];
+
+        /// <summary>
+        /// 选中的文件类型
+        /// </summary>
+        public PlcFileType? SelectedFileType
+        {
+            get { return _selectedFileType; }
+            set
+            {
+                SetProperty(ref _selectedFileType, value);
+                switch (value)
+                {
+                    case (PlcFileType.欧姆龙_CSV):
+                        InputRow = "22";
+                        InputCol = "6";
+                        break;
+                    case (PlcFileType.倍福_CSV):
+                        InputRow = "15";
+                        InputCol = "1";
+                        break;
+                }
+            }
+        }
+        private PlcFileType? _selectedFileType;
+
+        /// <summary>
         /// 输入的起始行
         /// </summary>
         public string InputRow
@@ -116,8 +146,8 @@ namespace PlcStepAnalyzer.Pages.ViewModels.DialogPage
 
         public NewAnalyzerRecordViewModel(IContainerProvider containerProvider) : base(containerProvider)
         {
-            InputRow = GlobalData.Instance.DataConfig.DefaultStartRow.ToString();
-            InputCol = GlobalData.Instance.DataConfig.DefaultStartCol.ToString();
+            //InputRow = GlobalData.Instance.DataConfig.DefaultStartRow.ToString();
+            //InputCol = GlobalData.Instance.DataConfig.DefaultStartCol.ToString();
             InputIndexTime = GlobalData.Instance.DataConfig.DefaultLineTime.ToString();
             Query();
         }
@@ -125,7 +155,6 @@ namespace PlcStepAnalyzer.Pages.ViewModels.DialogPage
         private void Query(string configName = "")
         {
             VarConfigs.Clear();
-
             var db = ContainerLocator.Container.Resolve<SqlSugarClient>();
             var allConfigs = db.Queryable<VarConfig>().ToList();
             VarConfigs.AddRange(allConfigs);
@@ -151,6 +180,11 @@ namespace PlcStepAnalyzer.Pages.ViewModels.DialogPage
                 if (string.IsNullOrEmpty(FileName))
                 {
                     ErrorMsg = "请选择要解析的文件!";
+                    return;
+                }
+                if (SelectedFileType == null)
+                {
+                    ErrorMsg = "请选择文件格式类型!";
                     return;
                 }
                 if (SelectedVarConfig == null)
@@ -179,6 +213,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels.DialogPage
                     Id = Guid.NewGuid(),
                     FilePath = SelectFilePath,
                     FileName = SelectFileName,
+                    FileType = SelectedFileType.Value,
                     StartRow = inputRow,
                     StartCol = inputCol,
                     IndexTime = inputTime,

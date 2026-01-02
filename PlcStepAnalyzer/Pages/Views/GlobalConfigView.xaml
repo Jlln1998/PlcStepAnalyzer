@@ -4,6 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PlcStepAnalyzer.Pages.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PlcStepAnalyzer.Pages.ViewModels"
+             d:DataContext="{d:DesignInstance vm:GlobalConfigViewModel}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              FontSize="20"
@@ -23,10 +25,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="85"/>
-                    <RowDefinition Height="85"/>
-                    <RowDefinition Height="85"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0"
+                <!--<TextBlock Grid.Column="0"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource FontColor_Title}"
@@ -53,13 +53,13 @@
                          FontSize="18"
                          Tag=""
                          Text="{Binding InputStartCol, Mode=TwoWay}"
-                         Style="{DynamicResource TnputTipsTextBox}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0"
+                         Style="{DynamicResource TnputTipsTextBox}"/>-->
+                <TextBlock Grid.Row="0" Grid.Column="0"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource FontColor_Title}"
                            Text="每行间隔(ms ):"/>
-                <TextBox Grid.Row="2" Grid.Column="1"
+                <TextBox Grid.Row="0" Grid.Column="1"
                          Width="220"
                          Height="40"
                          VerticalAlignment="Center"

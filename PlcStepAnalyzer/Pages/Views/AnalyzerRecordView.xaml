@@ -8,7 +8,7 @@
              xmlns:vm="clr-namespace:PlcStepAnalyzer.Pages.ViewModels"
              d:DataContext="{d:DesignInstance vm:AnalyzerRecordViewModel}"
              d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignWidth="900"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <Border>
@@ -37,6 +37,15 @@
                                     <StackPanel>
                                         <TextBlock Text="{Binding FilePath}"/>
                                         <TextBlock Text="{Binding FileName}"/>
+                                    </StackPanel>
+                                </ItemContainerTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="文件类型" Width="1*" MinWidth="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock HorizontalAlignment="Center" Text="{Binding FileType}"/>
                                     </StackPanel>
                                 </ItemContainerTemplate>
                             </DataGridTemplateColumn.CellTemplate>
