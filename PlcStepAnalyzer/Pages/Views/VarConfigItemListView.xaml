@@ -108,7 +108,18 @@
                             <Button Command="{Binding ExportTemplateCmd}" FontSize="16" Style="{DynamicResource StaticIconBtnStyle}">导出模板</Button>
                         </Border>
                         <Border Width="120" Style="{DynamicResource BtnBorder}">
-                            <Button Command="{Binding ExportDataCmd}" FontSize="16" Style="{DynamicResource StaticIconBtnStyle}">
+                            <Button Command="{Binding ExportDataCmd}"
+                                    CommandParameter="All"
+                                    FontSize="16"
+                                    Style="{DynamicResource StaticIconBtnStyle}">
+                                导出所有数据
+                            </Button>
+                        </Border>
+                        <Border Width="120" Style="{DynamicResource BtnBorder}">
+                            <Button Command="{Binding ExportDataCmd}"
+                                    CommandParameter="Query"
+                                    FontSize="16"
+                                    Style="{DynamicResource StaticIconBtnStyle}">
                                 导出当前数据
                             </Button>
                         </Border>

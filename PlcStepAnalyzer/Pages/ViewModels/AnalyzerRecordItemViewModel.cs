@@ -59,7 +59,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             AnalyzerRecordItems.Clear();
 
             GC.Collect();
-            GC.WaitForPendingFinalizers(); 
+            GC.WaitForPendingFinalizers();
         }
 
         public void Query()
@@ -103,10 +103,11 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                 string filePath = saveFileDialog.FileName;
                 try
                 {
+                    List<AnalyzerRecordItemVo> items = [];
                     if (type == "All")
                     {
                         var db = ContainerLocator.Container.Resolve<SqlSugarClient>();
-                        var allItems = db.Queryable<AnalyzerRecordItem>().Where(it => it.RecordId == _currentRecord.Id)
+                        items = db.Queryable<AnalyzerRecordItem>().Where(it => it.RecordId == _currentRecord.Id)
                             .Select(it => new AnalyzerRecordItemVo()
                             {
                                 VarName = it.VarName,
@@ -116,25 +117,10 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                                 UseTime = it.ElapsedTime.ToString("F3"),
                             })
                             .ToList();
-
-                        var groups = allItems.GroupBy(it => it.VarName).ToList();
-                        var sheetNames = new List<string>();
-                        var sheets = new Dictionary<string, object> { };
-                        for (int i = 0; i < groups.Count(); i++)
-                        {
-                            var sheetName = groups[i].Key.Length <= 30 ? groups[i].Key : groups[i].Key.Substring(0, 23);
-                            if (sheetNames.Contains(sheetName))
-                            {
-                                sheetName = sheetName + $"({i})";
-                            }
-                            sheetNames.Add(sheetName);
-                            sheets.Add(sheetName, groups[i].ToList());
-                        }
-                        MiniExcel.SaveAs(filePath, sheets, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                     }
                     else
                     {
-                        var selectedItems = AnalyzerRecordItems.Select(it => new AnalyzerRecordItemVo()
+                        items = AnalyzerRecordItems.Select(it => new AnalyzerRecordItemVo()
                         {
                             VarName = it.VarName,
                             VarValue = it.VarValue,
@@ -142,10 +128,22 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                             ActionName = it.ActionName,
                             UseTime = it.ElapsedTime.ToString("F3"),
                         }).ToList();
-
-                        MiniExcel.SaveAs(filePath, selectedItems, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                     }
 
+                    var groups = items.GroupBy(it => it.VarName).ToList();
+                    var sheetNames = new List<string>();
+                    var sheets = new Dictionary<string, object> { };
+                    for (int i = 0; i < groups.Count(); i++)
+                    {
+                        var sheetName = groups[i].Key.Length <= 30 ? groups[i].Key : groups[i].Key.Substring(groups[i].Key.Length - 23, 23);
+                        if (sheetNames.Contains(sheetName))
+                        {
+                            sheetName = sheetName + $"({i})";
+                        }
+                        sheetNames.Add(sheetName);
+                        sheets.Add(sheetName, groups[i].ToList());
+                    }
+                    MiniExcel.SaveAs(filePath, sheets, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                 }
                 catch (Exception ex)
                 {

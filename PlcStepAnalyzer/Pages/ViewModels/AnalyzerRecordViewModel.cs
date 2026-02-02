@@ -4,13 +4,7 @@ using PlcStepAnalyzer.Model.DbEntity;
 using PlcStepAnalyzer.Pages.Views.DialogPage;
 using PlcStepAnalyzer.Utils;
 using SqlSugar;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Unity.Storage.RegistrationSet;
 
 namespace PlcStepAnalyzer.Pages.ViewModels
 {
@@ -75,8 +69,10 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             {
                 return;
             }
+
             var db = ContainerLocator.Container.Resolve<SqlSugarClient>();
             db.Insertable(analyzerRecord).ExecuteCommand();
+
             var result = await StepAnalyzer.Analyzer(analyzerRecord);
             if (result.IsSuccess)
             {
@@ -84,6 +80,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             }
             else
             {
+                db.Deleteable(analyzerRecord).ExecuteCommand();
                 Query();
                 DialogManager.ShowWraningNoticeDialog(result.Message);
             }

@@ -117,20 +117,24 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                 return;
             }
 
-            if((targetMenu.Id==3 || targetMenu.Id==6) && navParams==null)
+            if ((targetMenu.Id == 3 || targetMenu.Id == 6) && navParams == null)
             {
                 return;
             }
 
             if (targetMenu.Pid == 0)
             {
+                if (SelectFirstMenuName == targetMenu.Name)
+                {
+                    return;
+                }
+                SelectFirstMenuName = targetMenu.Name;
+
                 // 修改一级菜单选中状态
                 foreach (var firstMenu in FirstMenus)
                 {
                     firstMenu.Selected = firstMenu.Id == targetMenu.Id;
                 }
-
-                SelectFirstMenuName = targetMenu.Name;
 
                 // 动态加载二级菜单，并且导航到第一个二级菜单
                 SecondMenus.Clear();
@@ -159,21 +163,29 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             }
             else
             {
-                // 修改一级菜单选中状态
-                foreach (var firstMenu in FirstMenus)
+                var targetFirstName = GlobalData.Instance.SysMenus.FirstOrDefault(it => it.Id == targetMenu.Pid)?.Name;
+                if(SelectFirstMenuName != targetFirstName)
                 {
-                    firstMenu.Selected = firstMenu.Id == targetMenu.Pid;
+                    SelectFirstMenuName = targetFirstName;
+
+                    // 修改一级菜单选中状态
+                    foreach (var firstMenu in FirstMenus)
+                    {
+                        firstMenu.Selected = firstMenu.Id == targetMenu.Pid;
+                    }
+
+                    // 动态加载二级菜单
+                    SecondMenus.Clear();
+                    SecondMenus.AddRange(GlobalData.Instance.SysMenus.Where(it => it.Pid == targetMenu.Pid));
+                    
                 }
 
-                SelectFirstMenuName = GlobalData.Instance.SysMenus.FirstOrDefault(it => it.Id == targetMenu.Pid)?.Name;
-
-                // 动态加载二级菜单，并且导航到指定的二级菜单
-                SecondMenus.Clear();
-                SecondMenus.AddRange(GlobalData.Instance.SysMenus.Where(it => it.Pid == targetMenu.Pid));
+                // 修改二级菜单选中状态，并导航到指定的二级菜单
                 foreach (var secMenu in SecondMenus)
                 {
                     secMenu.Selected = secMenu.Id == targetMenu.Id;
                 }
+
                 _regionManager.RequestNavigate(MainWindow.REGION_MAIN, targetMenu.ViewName, navParams);
             }
         }

@@ -81,8 +81,8 @@ namespace PlcStepAnalyzer.Pages.ViewModels
         /// <summary>
         /// 导出数据
         /// </summary>
-        public DelegateCommand ExportDataCmd => _exportDataCmd ??= new DelegateCommand(ExportData);
-        private DelegateCommand? _exportDataCmd;
+        public DelegateCommand<string> ExportDataCmd => _exportDataCmd ??= new DelegateCommand<string>(ExportData);
+        private DelegateCommand<string>? _exportDataCmd;
 
         /// <summary>
         /// 导入输入
@@ -237,7 +237,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
             }
         }
 
-        private void ExportData()
+        private void ExportData(string model)
         {
             if (VarConfigVo == null)
             {
@@ -260,7 +260,10 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                 try
                 {
                     var db = ContainerLocator.Container.Resolve<SqlSugarClient>();
-                    var allDetails = db.Queryable<VarConfigItem>().Where(it => it.ConfigId == VarConfigVo.Id)
+                    List<VarConfigItemVo> items = [];
+                    if (model == "All")
+                    {
+                        items = db.Queryable<VarConfigItem>().Where(it => it.ConfigId == VarConfigVo.Id)
                         .Select(it => new VarConfigItemVo()
                         {
                             VarName = it.VarName,
@@ -269,8 +272,20 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                             ActionName = it.ActionName,
                         })
                         .ToList();
-
-                    MiniExcel.SaveAs(filePath, allDetails, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
+                    }
+                    else
+                    {
+                        items = QueriedConfigItems
+                            .Select(it => new VarConfigItemVo()
+                            {
+                                VarName = it.VarName,
+                                VarValue = it.VarValue,
+                                StationName = it.StationName,
+                                ActionName = it.ActionName,
+                            })
+                        .ToList();
+                    }
+                    MiniExcel.SaveAs(filePath, items, configuration: new OpenXmlConfiguration() { AutoFilter = false }, overwriteFile: true);
                 }
                 catch (Exception ex)
                 {
@@ -307,7 +322,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                         {
                             // 如果遇到 ConfigId、 params 和 value 一致的数据
                             var data = db.Queryable<VarConfigItem>()
-                                            .First(it=>it.ConfigId == VarConfigVo.Id &&
+                                            .First(it => it.ConfigId == VarConfigVo.Id &&
                                                 it.VarName == detail.VarName &&
                                                 it.VarValue == detail.VarValue);
                             if (data != null)
@@ -328,7 +343,7 @@ namespace PlcStepAnalyzer.Pages.ViewModels
                             db.Insertable<VarConfigItem>(insertData).ExecuteCommand();
                             changed = true;
                         }
-                        if(changed)
+                        if (changed)
                         {
                             db.Updateable<VarConfig>()
                             .SetColumns(it => new VarConfig()

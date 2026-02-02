@@ -9,14 +9,39 @@ using System.Windows;
 
 namespace PlcStepAnalyzer.Utils
 {
+    /// <summary>
+    /// 流程步文件解析器
+    /// </summary>
     public class StepAnalyzer
     {
+        /// <summary>
+        /// 外部统一调用的解析方法
+        /// </summary>
+        /// <param name="analyzerRecord"></param>
+        /// <returns></returns>
         public static async Task<OpResult> Analyzer(AnalyzerRecord analyzerRecord)
         {
             if (analyzerRecord == null)
             {
                 return new OpResult();
             }
+
+            // 清空临时目录文件夹
+            if (Directory.Exists(WindowsCopyHelper.TempFileFloder))
+            {
+                Directory.Delete(WindowsCopyHelper.TempFileFloder, true);
+            }
+
+            var filePath = System.IO.Path.Combine(analyzerRecord.FilePath, analyzerRecord.FileName);
+
+            // 将文件复制到临时目录文件夹
+            var copyResult = WindowsCopyHelper.CopyToTempFloder(filePath);
+            if(!copyResult.IsSuccess)
+            {
+                return copyResult;
+            }
+
+            // 对不同类型文件进行对应的处理
             switch (analyzerRecord.FileType)
             {
                 case PlcFileType.欧姆龙_CSV:
@@ -30,6 +55,10 @@ namespace PlcStepAnalyzer.Utils
             }
         }
 
+        /// <summary>
+        /// 欧姆龙CSV文件解析方法
+        /// </summary>
+        /// <returns></returns>
         private static async Task<OpResult> OmronCSVAnalyzer(AnalyzerRecord analyzerRecord)
         {
             var opResult = new OpResult();
@@ -40,7 +69,9 @@ namespace PlcStepAnalyzer.Utils
                 // 弹窗提示正在解析数据
                 progressBarView.Show();
                 var progressVm = (ShowProgressBarViewModel)progressBarView.DataContext;
-                string fileName = System.IO.Path.Combine(analyzerRecord.FilePath, analyzerRecord.FileName);
+
+                string fileName = Path.Combine(WindowsCopyHelper.TempFileFloder,analyzerRecord.FileName);
+
                 // 读取 CSV 文件
                 using (StreamReader reader = new StreamReader(fileName))
                 {
@@ -142,6 +173,10 @@ namespace PlcStepAnalyzer.Utils
             }
         }
 
+        /// <summary>
+        /// 倍福CSV文件解析方法
+        /// </summary>
+        /// <returns></returns>
         private static async Task<OpResult> BeckhoffCSVAnalyzer(AnalyzerRecord analyzerRecord)
         {
             var opResult = new OpResult();
@@ -151,8 +186,11 @@ namespace PlcStepAnalyzer.Utils
             {
                 // 弹窗提示正在解析数据
                 progressBarView.Show();
+
                 var progressVm = (ShowProgressBarViewModel)progressBarView.DataContext;
-                string fileName = System.IO.Path.Combine(analyzerRecord.FilePath, analyzerRecord.FileName);
+
+                string fileName = Path.Combine(WindowsCopyHelper.TempFileFloder, analyzerRecord.FileName);
+
                 // 读取 CSV 文件
                 using (StreamReader reader = new StreamReader(fileName))
                 {
